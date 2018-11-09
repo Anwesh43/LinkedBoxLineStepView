@@ -67,6 +67,12 @@ class BoxLineStepView(ctx : Context) : View(ctx) {
 
     private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    var onAnimationListener : OnAnimationListener? = null
+
+    fun addOnAnimationListener(onComplete : (Int) -> Unit, onReset : (Int) -> Unit) {
+        onAnimationListener = OnAnimationListener(onComplete, onReset)
+    }
+
     override fun onDraw(canvas : Canvas) {
         renderer.render(canvas, paint)
     }
@@ -211,6 +217,10 @@ class BoxLineStepView(ctx : Context) : View(ctx) {
             animator.animate {
                 bls.update {i, scl ->
                     animator.stop()
+                    when (scl) {
+                        0f -> view.onAnimationListener?.onReset?.invoke(i)
+                        1f -> view.onAnimationListener?.onComplete?.invoke(i)
+                    }
                 }
             }
         }
@@ -230,4 +240,6 @@ class BoxLineStepView(ctx : Context) : View(ctx) {
             return view
         }
     }
+
+    data class OnAnimationListener(var onComplete : (Int) -> Unit, var onReset : (Int) -> Unit)
 }
