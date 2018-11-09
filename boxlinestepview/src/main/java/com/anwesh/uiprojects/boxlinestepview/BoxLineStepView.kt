@@ -195,4 +195,27 @@ class BoxLineStepView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : BoxLineStepView) {
+
+        private var bls : BoxLineStep = BoxLineStep(0)
+
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            bls.draw(canvas, paint)
+            animator.animate {
+                bls.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            bls.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
