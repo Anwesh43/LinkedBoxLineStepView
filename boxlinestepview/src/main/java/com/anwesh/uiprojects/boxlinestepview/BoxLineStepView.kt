@@ -24,11 +24,43 @@ val scGap : Float = 0.05f
 
 fun Int.getInverse() : Float = 1f/this
 
-fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.getInverse(), Math.max(this - i * n.getInverse(), 0f))
+fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.getInverse(), Math.max(this - i * n.getInverse(), 0f)) * n
 
 fun Float.scaleFactor() : Float = Math.floor(this / 0.5).toFloat()
 
 fun Float.updateScale(dir : Float) : Float = dir * scGap * (scaleFactor() / OUTER_LINES + (1f - scaleFactor()) / INNER_LINES)
+
+fun Canvas.drawBLSNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / (nodes + 1)
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    val size : Float = gap / 3
+    val hGap : Float = size / (INNER_LINES + 1)
+    val deg : Float = 360f / OUTER_LINES
+    paint.strokeWidth = Math.min(w, h) / 60
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.color = Color.parseColor("#311B92")
+    save()
+    translate(gap * (i + 1), h/2)
+    for (j in 0..INNER_LINES - 1) {
+        val sc : Float = sc1.divideScale(j, INNER_LINES)
+        save()
+        translate(-size, -size + (hGap) * (j + 1))
+        drawLine(0f, 0f, 2 * size * sc, 0f, paint)
+        restore()
+    }
+    for (j in 0..OUTER_LINES - 1) {
+        val sc : Float = sc2.divideScale(j, OUTER_LINES)
+        save()
+        rotate(deg * j)
+        translate(size, size)
+        drawLine(0f, 0f, -2 * size * sc, 0f, paint)
+        restore()
+    }
+    restore()
+}
 
 class BoxLineStepView(ctx : Context) : View(ctx) {
 
