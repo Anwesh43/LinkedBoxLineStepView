@@ -36,7 +36,7 @@ fun Canvas.drawBLSNode(i : Int, scale : Float, paint : Paint) {
     val sc1 : Float = scale.divideScale(0, 2)
     val sc2 : Float = scale.divideScale(1, 2)
     val size : Float = gap / 3
-    val hGap : Float = size / (INNER_LINES + 1)
+    val hGap : Float = (2 * size) / (INNER_LINES + 1)
     val deg : Float = 360f / OUTER_LINES
     paint.strokeWidth = Math.min(w, h) / 60
     paint.strokeCap = Paint.Cap.ROUND
@@ -108,7 +108,7 @@ class BoxLineStepView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(30)
                     view.invalidate()
                 } catch(ex : Exception) {
 
