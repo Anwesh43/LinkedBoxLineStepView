@@ -9,7 +9,6 @@ import android.view.MotionEvent
 import android.graphics.Paint
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.RectF
 import android.app.Activity
 import android.content.Context
 import android.util.Log
@@ -220,6 +219,15 @@ class BoxLineStepView(ctx : Context) : View(ctx) {
             bls.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+
+        fun create(activity : Activity) : BoxLineStepView {
+            val view : BoxLineStepView = BoxLineStepView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
